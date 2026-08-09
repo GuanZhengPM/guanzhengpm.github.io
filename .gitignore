@@ -1,5 +1,2 @@
 .DS_Store
 node_modules/
-analytics-worker/node_modules/
-analytics-worker/.dev.vars
-analytics-worker/wrangler.jsonc

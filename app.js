@@ -1,5 +1,3 @@
-import { analyticsEnabled, getPageStats, startReadingTimer, trackPageView } from "./analytics.js";
-
 const POSTS_URL = "./posts.json";
 
 const $ = (selector, parent = document) => parent.querySelector(selector);
@@ -15,10 +13,6 @@ function escapeHtml(value) {
 
 function postHref(post) {
   return `./post.html?id=${encodeURIComponent(post.id)}`;
-}
-
-function postKey(post) {
-  return `post:${post.id}`;
 }
 
 function errorMarkup(message) {
@@ -233,29 +227,6 @@ function setupMarkdownActions(post, markdown) {
   actionsRoot.hidden = false;
 }
 
-function formatStatDuration(seconds) {
-  const rounded = Math.max(0, Math.round(Number(seconds) || 0));
-  if (rounded < 60) return "少于 1 分钟";
-  return `${Math.round(rounded / 60)} 分钟`;
-}
-
-function showArticleStats(stats) {
-  const statsRoot = $("#article-stats");
-  if (!statsRoot || !stats || !Number.isFinite(Number(stats.views))) return;
-
-  const views = new Intl.NumberFormat("zh-CN").format(Math.max(0, Number(stats.views)));
-  statsRoot.textContent = `${views} 浏览 · 平均有效阅读 ${formatStatDuration(stats.averageReadSeconds)}`;
-  statsRoot.hidden = false;
-}
-
-async function setupPostAnalytics(post) {
-  if (!analyticsEnabled) return;
-  const key = postKey(post);
-  await trackPageView(key);
-  showArticleStats(await getPageStats(key));
-  startReadingTimer(key);
-}
-
 async function renderPost(posts) {
   const articleRoot = $("#article");
   if (!articleRoot) return;
@@ -286,7 +257,6 @@ async function renderPost(posts) {
       .join("");
     if (!tocRoot.innerHTML) $(".article-toc").hidden = true;
     setupMarkdownActions(post, rawMarkdown);
-    void setupPostAnalytics(post);
   } catch (error) {
     contentRoot.innerHTML = errorMarkup("文章正文加载失败。");
   }
