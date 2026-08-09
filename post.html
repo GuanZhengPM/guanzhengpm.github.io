@@ -23,8 +23,8 @@
     <a class="skip-link" href="#main-content">跳到正文</a>
     <header class="site-header">
       <div class="site-header__inner">
-        <a class="wordmark" href="./index.html" aria-label="Guanzheng's Blog 首页">
-          <span>Guanzheng's Blog</span><i aria-hidden="true">.</i>
+        <a class="wordmark wordmark--back" href="./index.html" aria-label="返回 Blog 列表">
+          ← 返回 Blog 列表
         </a>
         <nav class="site-nav" aria-label="主导航">
           <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub ↗</a>
@@ -34,7 +34,6 @@
     </header>
 
     <main id="main-content" class="article-shell">
-      <a class="back-link" href="./index.html">← 返回文章</a>
       <article id="article" class="article" aria-live="polite">
         <header class="article-header">
           <h1 id="article-title">正在读取文章…</h1>
@@ -46,8 +45,11 @@
         </header>
         <div class="article-layout">
           <aside class="article-toc" aria-label="文章目录">
-            <p>目录</p>
-            <nav id="article-toc"></nav>
+            <button id="toc-toggle" class="toc-toggle" type="button" aria-expanded="false" aria-label="展开目录">
+              <span>目录</span>
+              <span id="toc-toggle-label">展开</span>
+            </button>
+            <nav id="article-toc" hidden></nav>
           </aside>
           <div id="post-content" class="article-content"></div>
         </div>
