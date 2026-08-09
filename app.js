@@ -42,7 +42,7 @@ function renderHome(posts) {
       (post) => `
         <article class="post-row">
           <div>
-            <h3><a href="${postHref(post)}">${escapeHtml(post.title)}</a></h3>
+            <h2><a href="${postHref(post)}">${escapeHtml(post.title)}</a></h2>
           </div>
         </article>
       `,
@@ -189,45 +189,15 @@ function markdownExport(post, markdown) {
   ].join("\n");
 }
 
-async function copyText(text) {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.setAttribute("readonly", "");
-  textarea.style.cssText = "position:fixed;opacity:0;pointer-events:none;";
-  document.body.append(textarea);
-  textarea.select();
-  const copied = document.execCommand("copy");
-  textarea.remove();
-  if (!copied) throw new Error("复制失败");
-}
-
-function setupMarkdownActions(post, markdown) {
+function setupMarkdownDownload(post, markdown) {
   const actionsRoot = $("#article-actions");
-  const copyButton = $("#copy-markdown");
   const downloadLink = $("#download-markdown");
-  const statusRoot = $("#markdown-status");
-  if (!actionsRoot || !copyButton || !downloadLink || !statusRoot) return;
+  if (!actionsRoot || !downloadLink) return;
 
   const fullMarkdown = markdownExport(post, markdown);
   const downloadUrl = URL.createObjectURL(new Blob([fullMarkdown], { type: "text/markdown;charset=utf-8" }));
   downloadLink.href = downloadUrl;
   downloadLink.download = `${post.id}.md`;
-  copyButton.addEventListener("click", async () => {
-    try {
-      await copyText(fullMarkdown);
-      statusRoot.textContent = "已复制";
-    } catch {
-      statusRoot.textContent = "复制失败";
-    }
-    window.setTimeout(() => {
-      statusRoot.textContent = "";
-    }, 1800);
-  });
   actionsRoot.hidden = false;
 }
 
@@ -241,9 +211,9 @@ function showArticleWordCount(contentRoot) {
     .join("")
     .replace(/\s/g, "").length;
 
-  const wordCount = `${new Intl.NumberFormat("zh-CN").format(characters)} 字`;
+  const wordCount = `${new Intl.NumberFormat("zh-CN").format(characters)}字`;
   wordCountRoot.textContent = wordCount;
-  wordCountRoot.setAttribute("aria-label", `文章字数 ${wordCount}`);
+  wordCountRoot.setAttribute("aria-label", `文章字数${wordCount}`);
 }
 
 function scrollToHash({ instant = false } = {}) {
@@ -259,8 +229,11 @@ function scrollToHash({ instant = false } = {}) {
   const root = document.documentElement;
   const previousScrollBehavior = root.style.scrollBehavior;
   root.style.scrollBehavior = "auto";
-  target.scrollIntoView({ block: "start" });
-  root.style.scrollBehavior = previousScrollBehavior;
+  void root.offsetHeight;
+  target.scrollIntoView({ block: "start", behavior: "auto" });
+  window.requestAnimationFrame(() => {
+    root.style.scrollBehavior = previousScrollBehavior;
+  });
 }
 
 function setupArticleToc(hasItems) {
@@ -291,7 +264,7 @@ async function renderPost(posts) {
   if (!articleRoot) return;
 
   const id = new URLSearchParams(window.location.search).get("id");
-  const post = posts.find((item) => item.id === id) || posts[0];
+  const post = id ? posts.find((item) => item.id === id) : posts[0];
   if (!post) {
     articleRoot.innerHTML = errorMarkup("找不到这篇文章。");
     articleRoot.setAttribute("aria-busy", "false");
@@ -320,7 +293,7 @@ async function renderPost(posts) {
       })
       .join("");
     setupArticleToc(Boolean(tocRoot.innerHTML));
-    setupMarkdownActions(post, rawMarkdown);
+    setupMarkdownDownload(post, rawMarkdown);
     articleRoot.setAttribute("aria-busy", "false");
     window.requestAnimationFrame(() => scrollToHash({ instant: true }));
   } catch (error) {
@@ -368,6 +341,10 @@ async function boot() {
   } catch (error) {
     $("#post-list") && ($("#post-list").innerHTML = errorMarkup("文章索引加载失败。"));
     $("#post-content") && ($("#post-content").innerHTML = errorMarkup("文章索引加载失败。"));
+    $("#article-title") && ($("#article-title").textContent = "加载失败");
+    $(".article-toc") && ($(".article-toc").hidden = true);
+    $("#article-actions") && ($("#article-actions").hidden = true);
+    $("#article")?.setAttribute("aria-busy", "false");
   }
 }
 
