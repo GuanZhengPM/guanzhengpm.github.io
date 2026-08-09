@@ -179,9 +179,12 @@ button:focus-visible {
   font-family: var(--font);
   font-size: clamp(1.3rem, 2vw, 1.7rem);
   font-weight: 650;
-  letter-spacing: -.035em;
+  letter-spacing: normal;
   line-height: 1.22;
-  text-wrap: pretty;
+  text-wrap: wrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-break: auto;
 }
 
 .post-row h2 a:hover { color: var(--accent); }
@@ -199,10 +202,15 @@ button:focus-visible {
 .article-shell { padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(4rem, 8vw, 7rem); }
 
 .article {
-  --toc-width: 11.5rem;
-  --toc-gap: clamp(2rem, 4vw, 4rem);
   width: min(100%, var(--reading-width));
   margin-inline: auto;
+}
+
+.article-header,
+.article-toc,
+.article-content {
+  inline-size: 100%;
+  min-inline-size: 0;
 }
 
 .article-header { padding-bottom: clamp(2.25rem, 4vw, 3.5rem); }
@@ -213,11 +221,16 @@ button:focus-visible {
   font-family: var(--font);
   font-size: clamp(2rem, 3.25vw, 3.25rem);
   font-weight: 650;
-  letter-spacing: -.045em;
+  letter-spacing: normal;
   line-height: 1.14;
-  text-wrap: pretty;
+  text-wrap: wrap;
   word-break: normal;
+  overflow-wrap: normal;
+  line-break: auto;
 }
+
+.article-header .article-title__date,
+.article-header .article-title__subject { white-space: nowrap; }
 
 .article-actions {
   display: flex;
@@ -304,7 +317,10 @@ button:focus-visible {
 .article-content p {
   margin: 0 0 1.55rem;
   text-indent: 2em;
-  text-wrap: pretty;
+  text-wrap: wrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-break: auto;
 }
 
 .article-content h2,
@@ -312,8 +328,11 @@ button:focus-visible {
   scroll-margin-top: 2rem;
   font-family: var(--font);
   font-weight: 650;
-  letter-spacing: -.035em;
-  text-wrap: pretty;
+  letter-spacing: normal;
+  text-wrap: wrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-break: auto;
 }
 
 .article-content h2 {
@@ -372,42 +391,6 @@ button:focus-visible {
 }
 
 .load-error { color: var(--muted); }
-
-@media (min-width: 1440px) {
-  .article {
-    display: grid;
-    width: min(100%, var(--page-width));
-    grid-template-columns: minmax(0, 1fr) minmax(0, var(--reading-width)) minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .article-header,
-  .article-content {
-    grid-column: 2;
-  }
-
-  .article-header { grid-row: 1; }
-
-  .article-toc {
-    position: sticky;
-    z-index: 1;
-    top: clamp(1.5rem, 5vh, 3rem);
-    grid-column: 1;
-    grid-row: 2;
-    align-self: start;
-    justify-self: end;
-    width: var(--toc-width);
-    margin: 0 var(--toc-gap) 0 0;
-  }
-
-  .article-content { grid-row: 2; }
-
-  .article-toc nav {
-    max-height: calc(100vh - 7rem);
-    padding-right: .3rem;
-    overflow-y: auto;
-  }
-}
 
 @media (max-width: 700px) {
   .site-header__inner,
