@@ -17,7 +17,7 @@
     </script>
     <title>文章 · Guanzheng's Blog</title>
     <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=3" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到正文</a>
@@ -33,33 +33,31 @@
       </div>
     </header>
 
-    <main id="main-content" class="article-shell">
-      <article id="article" class="article" aria-live="polite">
+    <main id="main-content" class="article-shell" tabindex="-1">
+      <article id="article" class="article" aria-busy="true">
         <header class="article-header">
           <h1 id="article-title">正在读取文章…</h1>
           <div id="article-actions" class="article-actions" hidden>
             <button id="copy-markdown" type="button">复制 Markdown</button>
             <a id="download-markdown" download>下载 .md</a>
-            <span id="article-word-count" class="article-word-count" aria-label="文章字数"></span>
+            <span id="article-word-count" class="article-word-count"></span>
             <span id="markdown-status" aria-live="polite"></span>
           </div>
         </header>
-        <div class="article-layout">
-          <aside class="article-toc" aria-label="文章目录">
-            <button id="toc-toggle" class="toc-toggle" type="button" aria-expanded="false" aria-label="展开目录">
-              <span>目录</span>
-              <span id="toc-toggle-label">展开</span>
-            </button>
-            <nav id="article-toc" hidden></nav>
-          </aside>
-          <div id="post-content" class="article-content"></div>
-        </div>
+        <aside class="article-toc" aria-label="文章目录">
+          <button id="toc-toggle" class="toc-toggle" type="button" aria-controls="article-toc" aria-expanded="false" aria-label="展开目录">
+            <span>目录</span>
+            <span id="toc-toggle-label">展开</span>
+          </button>
+          <nav id="article-toc" aria-label="文章章节" hidden></nav>
+        </aside>
+        <div id="post-content" class="article-content"></div>
       </article>
     </main>
 
     <footer class="site-footer">
       <p>© <span data-current-year></span> Guanzheng</p>
     </footer>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=3"></script>
   </body>
 </html>

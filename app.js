@@ -50,6 +50,11 @@ function renderHome(posts) {
     .join("");
 }
 
+function tocLabel(text) {
+  const match = /^(\d+)\.【([^】]+)】/.exec(text);
+  return match ? `${match[1]}. ${match[2]}` : text;
+}
+
 function renderInline(text) {
   let rendered = escapeHtml(text.trim());
   rendered = rendered.replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -236,33 +241,67 @@ function showArticleWordCount(contentRoot) {
     .join("")
     .replace(/\s/g, "").length;
 
-  wordCountRoot.textContent = `${new Intl.NumberFormat("zh-CN").format(characters)} 字`;
+  const wordCount = `${new Intl.NumberFormat("zh-CN").format(characters)} 字`;
+  wordCountRoot.textContent = wordCount;
+  wordCountRoot.setAttribute("aria-label", `文章字数 ${wordCount}`);
+}
+
+function scrollToHash({ instant = false } = {}) {
+  const id = window.location.hash.slice(1);
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (!target) return;
+  if (!instant) {
+    target.scrollIntoView({ block: "start" });
+    return;
+  }
+
+  const root = document.documentElement;
+  const previousScrollBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  target.scrollIntoView({ block: "start" });
+  root.style.scrollBehavior = previousScrollBehavior;
 }
 
 function setupArticleToc(hasItems) {
-  const articleRoot = $("#article");
   const tocSection = $(".article-toc");
   const tocRoot = $("#article-toc");
   const toggle = $("#toc-toggle");
   const toggleLabel = $("#toc-toggle-label");
-  if (!articleRoot || !tocSection || !tocRoot || !toggle || !toggleLabel) return;
+  if (!tocSection || !tocRoot || !toggle || !toggleLabel) return;
 
   if (!hasItems) {
     tocSection.hidden = true;
-    articleRoot.classList.add("is-toc-collapsed");
     return;
   }
 
   const setTocExpanded = (expanded) => {
-    articleRoot.classList.toggle("is-toc-collapsed", !expanded);
     tocRoot.hidden = !expanded;
     toggle.setAttribute("aria-expanded", String(expanded));
     toggle.setAttribute("aria-label", expanded ? "收起目录" : "展开目录");
     toggleLabel.textContent = expanded ? "收起" : "展开";
   };
 
+  const links = [...tocRoot.querySelectorAll("a")];
+  const setCurrentLink = () => {
+    const hash = window.location.hash;
+    links.forEach((link) => {
+      if (link.getAttribute("href") === hash) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
   toggle.onclick = () => setTocExpanded(toggle.getAttribute("aria-expanded") !== "true");
+  tocRoot.addEventListener("click", (event) => {
+    if (!event.target.closest?.("a")) return;
+    window.requestAnimationFrame(() => {
+      setCurrentLink();
+      if (window.matchMedia("(max-width: 1359px)").matches) setTocExpanded(false);
+    });
+  });
+  window.addEventListener("hashchange", setCurrentLink);
   setTocExpanded(false);
+  setCurrentLink();
 }
 
 async function renderPost(posts) {
@@ -273,6 +312,7 @@ async function renderPost(posts) {
   const post = posts.find((item) => item.id === id) || posts[0];
   if (!post) {
     articleRoot.innerHTML = errorMarkup("找不到这篇文章。");
+    articleRoot.setAttribute("aria-busy", "false");
     return;
   }
 
@@ -292,12 +332,18 @@ async function renderPost(posts) {
     showArticleWordCount(contentRoot);
     tocRoot.innerHTML = headings
       .filter((heading) => heading.level === 2)
-      .map((heading) => `<a href="#${heading.id}">${escapeHtml(heading.text)}</a>`)
+      .map((heading) => {
+        const fullLabel = escapeHtml(heading.text);
+        return `<a href="#${heading.id}" aria-label="${fullLabel}" title="${fullLabel}">${escapeHtml(tocLabel(heading.text))}</a>`;
+      })
       .join("");
     setupArticleToc(Boolean(tocRoot.innerHTML));
     setupMarkdownActions(post, rawMarkdown);
+    articleRoot.setAttribute("aria-busy", "false");
+    window.requestAnimationFrame(() => scrollToHash({ instant: true }));
   } catch (error) {
     contentRoot.innerHTML = errorMarkup("文章正文加载失败。");
+    articleRoot.setAttribute("aria-busy", "false");
   }
 }
 
@@ -328,6 +374,7 @@ function setupTheme() {
 
 async function boot() {
   setupTheme();
+  window.addEventListener("hashchange", scrollToHash);
   document.querySelectorAll("[data-current-year]").forEach((node) => {
     node.textContent = String(new Date().getFullYear());
   });
