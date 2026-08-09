@@ -266,21 +266,12 @@ function scrollToHash({ instant = false } = {}) {
 function setupArticleToc(hasItems) {
   const tocSection = $(".article-toc");
   const tocRoot = $("#article-toc");
-  const toggle = $("#toc-toggle");
-  const toggleLabel = $("#toc-toggle-label");
-  if (!tocSection || !tocRoot || !toggle || !toggleLabel) return;
+  if (!tocSection || !tocRoot) return;
 
   if (!hasItems) {
     tocSection.hidden = true;
     return;
   }
-
-  const setTocExpanded = (expanded) => {
-    tocRoot.hidden = !expanded;
-    toggle.setAttribute("aria-expanded", String(expanded));
-    toggle.setAttribute("aria-label", expanded ? "收起目录" : "展开目录");
-    toggleLabel.textContent = expanded ? "收起" : "展开";
-  };
 
   const links = [...tocRoot.querySelectorAll("a")];
   const setCurrentLink = () => {
@@ -291,16 +282,7 @@ function setupArticleToc(hasItems) {
     });
   };
 
-  toggle.onclick = () => setTocExpanded(toggle.getAttribute("aria-expanded") !== "true");
-  tocRoot.addEventListener("click", (event) => {
-    if (!event.target.closest?.("a")) return;
-    window.requestAnimationFrame(() => {
-      setCurrentLink();
-      if (window.matchMedia("(max-width: 1359px)").matches) setTocExpanded(false);
-    });
-  });
   window.addEventListener("hashchange", setCurrentLink);
-  setTocExpanded(false);
   setCurrentLink();
 }
 
