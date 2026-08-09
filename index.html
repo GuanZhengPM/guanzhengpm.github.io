@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Guanzheng 的月度笔记：关于 AI、产品、职业与学习中的判断。" />
+    <meta name="theme-color" content="#f7f6f1" />
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("guanzheng-theme");
+          const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.dataset.theme = theme;
+          document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#181918" : "#f7f6f1";
+        } catch {}
+      })();
+    </script>
+    <title>Guanzheng's Blog</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="wordmark" href="./index.html" aria-label="Guanzheng's Blog 首页">
+          <span>Guanzheng's Blog</span><i aria-hidden="true">.</i>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="./about.html">关于</a>
+          <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" aria-pressed="false">◐</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" class="page-shell page-shell--home">
+      <section class="post-list-section" aria-label="文章">
+        <div id="post-list" class="post-list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span data-current-year></span> Guanzheng</p>
+    </footer>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
