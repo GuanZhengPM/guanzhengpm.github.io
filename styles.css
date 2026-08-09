@@ -408,6 +408,15 @@ button:focus-visible {
   }
 }
 
+@media (min-width: 701px) and (max-width: 1439px) {
+  .article-header h1,
+  .article-content h2,
+  .article-content h3 {
+    text-wrap: balance;
+    word-break: keep-all;
+  }
+}
+
 @media (max-width: 700px) {
   .site-header__inner,
   .page-shell,
