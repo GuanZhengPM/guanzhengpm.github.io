@@ -303,7 +303,7 @@ async function renderPost(posts) {
   const tocRoot = $("#article-toc");
 
   titleRoot.textContent = post.title;
-  document.title = `${post.title} · Guanzheng's Blog`;
+  document.title = `${post.title}·Guanzheng's Blog`;
 
   try {
     const response = await fetch(`./${post.file}`, { cache: "no-store" });
