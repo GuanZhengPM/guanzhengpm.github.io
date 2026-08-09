@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "guanzheng-blog-analytics",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-09",
+  "vars": {
+    "ALLOWED_ORIGIN": "https://guanzhengpm.github.io",
+    "SITE_ID": "guanzheng-blog"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "guanzheng-blog-analytics",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ]
+}

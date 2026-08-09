@@ -1,0 +1,9 @@
+{
+  "name": "guanzheng-blog-analytics",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx wrangler dev",
+    "deploy": "npx wrangler deploy"
+  }
+}

@@ -1,0 +1,336 @@
+import { analyticsEnabled, getPageStats, startReadingTimer, trackPageView } from "./analytics.js";
+
+const POSTS_URL = "./posts.json";
+
+const $ = (selector, parent = document) => parent.querySelector(selector);
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function postHref(post) {
+  return `./post.html?id=${encodeURIComponent(post.id)}`;
+}
+
+function postKey(post) {
+  return `post:${post.id}`;
+}
+
+function errorMarkup(message) {
+  return `<p class="load-error">${escapeHtml(message)} 请刷新页面后重试。</p>`;
+}
+
+async function loadPosts() {
+  const response = await fetch(POSTS_URL, { cache: "no-store" });
+  if (!response.ok) throw new Error("无法读取文章索引");
+
+  const posts = await response.json();
+  if (!Array.isArray(posts)) throw new Error("文章索引格式不正确");
+
+  return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+function renderHome(posts) {
+  const listRoot = $("#post-list");
+  if (!listRoot) return;
+  if (!posts.length) {
+    listRoot.innerHTML = errorMarkup("还没有文章。");
+    return;
+  }
+
+  listRoot.innerHTML = posts
+    .map(
+      (post) => `
+        <article class="post-row">
+          <div>
+            <h3><a href="${postHref(post)}">${escapeHtml(post.title)}</a></h3>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderInline(text) {
+  let rendered = escapeHtml(text.trim());
+  rendered = rendered.replace(/`([^`]+)`/g, "<code>$1</code>");
+  rendered = rendered.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  rendered = rendered.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  rendered = rendered.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noreferrer">$1 ↗</a>',
+  );
+  return rendered;
+}
+
+function markdownToHtml(markdown) {
+  const lines = markdown.replaceAll("\r", "").split("\n");
+  const html = [];
+  const headings = [];
+  let paragraph = [];
+  let listItems = [];
+  let listType = null;
+  let quote = [];
+  let inCodeBlock = false;
+  let codeLines = [];
+  let headingCount = 0;
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    html.push(`<p>${renderInline(paragraph.join(" "))}</p>`);
+    paragraph = [];
+  };
+
+  const flushList = () => {
+    if (!listItems.length || !listType) return;
+    const tag = listType === "ordered" ? "ol" : "ul";
+    html.push(`<${tag}>${listItems.map((item) => `<li>${renderInline(item)}</li>`).join("")}</${tag}>`);
+    listItems = [];
+    listType = null;
+  };
+
+  const flushQuote = () => {
+    if (!quote.length) return;
+    html.push(`<blockquote><p>${renderInline(quote.join(" "))}</p></blockquote>`);
+    quote = [];
+  };
+
+  const flushCode = () => {
+    if (!inCodeBlock) return;
+    html.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+    codeLines = [];
+    inCodeBlock = false;
+  };
+
+  const flushBlocks = () => {
+    flushParagraph();
+    flushList();
+    flushQuote();
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (line.startsWith("```")) {
+      if (inCodeBlock) flushCode();
+      else {
+        flushBlocks();
+        inCodeBlock = true;
+      }
+      continue;
+    }
+
+    if (inCodeBlock) {
+      codeLines.push(rawLine);
+      continue;
+    }
+
+    if (!line) {
+      flushBlocks();
+      continue;
+    }
+
+    const heading = /^(#{2,3})\s+(.+)$/.exec(line);
+    if (heading) {
+      flushBlocks();
+      const level = heading[1].length;
+      const text = heading[2];
+      const id = `section-${++headingCount}`;
+      headings.push({ id, text, level });
+      html.push(`<h${level} id="${id}">${renderInline(text)}</h${level}>`);
+      continue;
+    }
+
+    if (line === "---") {
+      flushBlocks();
+      html.push("<hr />");
+      continue;
+    }
+
+    const orderedItem = /^\d+\.\s+(.+)$/.exec(line);
+    const unorderedItem = /^[-*]\s+(.+)$/.exec(line);
+    if (orderedItem || unorderedItem) {
+      flushParagraph();
+      flushQuote();
+      const nextType = orderedItem ? "ordered" : "unordered";
+      if (listType && listType !== nextType) flushList();
+      listType = nextType;
+      listItems.push((orderedItem || unorderedItem)[1]);
+      continue;
+    }
+
+    const quoteLine = /^>\s?(.+)$/.exec(line);
+    if (quoteLine) {
+      flushParagraph();
+      flushList();
+      quote.push(quoteLine[1]);
+      continue;
+    }
+
+    flushList();
+    flushQuote();
+    paragraph.push(line);
+  }
+
+  flushBlocks();
+  flushCode();
+  return { html: html.join("\n"), headings };
+}
+
+function markdownExport(post, markdown) {
+  return [
+    `# ${post.title}`,
+    "",
+    markdown.trim(),
+    "",
+  ].join("\n");
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.cssText = "position:fixed;opacity:0;pointer-events:none;";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("复制失败");
+}
+
+function setupMarkdownActions(post, markdown) {
+  const actionsRoot = $("#article-actions");
+  const copyButton = $("#copy-markdown");
+  const downloadLink = $("#download-markdown");
+  const statusRoot = $("#markdown-status");
+  if (!actionsRoot || !copyButton || !downloadLink || !statusRoot) return;
+
+  const fullMarkdown = markdownExport(post, markdown);
+  const downloadUrl = URL.createObjectURL(new Blob([fullMarkdown], { type: "text/markdown;charset=utf-8" }));
+  downloadLink.href = downloadUrl;
+  downloadLink.download = `${post.id}.md`;
+  copyButton.addEventListener("click", async () => {
+    try {
+      await copyText(fullMarkdown);
+      statusRoot.textContent = "已复制";
+    } catch {
+      statusRoot.textContent = "复制失败";
+    }
+    window.setTimeout(() => {
+      statusRoot.textContent = "";
+    }, 1800);
+  });
+  actionsRoot.hidden = false;
+}
+
+function formatStatDuration(seconds) {
+  const rounded = Math.max(0, Math.round(Number(seconds) || 0));
+  if (rounded < 60) return "少于 1 分钟";
+  return `${Math.round(rounded / 60)} 分钟`;
+}
+
+function showArticleStats(stats) {
+  const statsRoot = $("#article-stats");
+  if (!statsRoot || !stats || !Number.isFinite(Number(stats.views))) return;
+
+  const views = new Intl.NumberFormat("zh-CN").format(Math.max(0, Number(stats.views)));
+  statsRoot.textContent = `${views} 浏览 · 平均有效阅读 ${formatStatDuration(stats.averageReadSeconds)}`;
+  statsRoot.hidden = false;
+}
+
+async function setupPostAnalytics(post) {
+  if (!analyticsEnabled) return;
+  const key = postKey(post);
+  await trackPageView(key);
+  showArticleStats(await getPageStats(key));
+  startReadingTimer(key);
+}
+
+async function renderPost(posts) {
+  const articleRoot = $("#article");
+  if (!articleRoot) return;
+
+  const id = new URLSearchParams(window.location.search).get("id");
+  const post = posts.find((item) => item.id === id) || posts[0];
+  if (!post) {
+    articleRoot.innerHTML = errorMarkup("找不到这篇文章。");
+    return;
+  }
+
+  const titleRoot = $("#article-title");
+  const contentRoot = $("#post-content");
+  const tocRoot = $("#article-toc");
+
+  titleRoot.textContent = post.title;
+  document.title = `${post.title} · Guanzheng's Blog`;
+
+  try {
+    const response = await fetch(`./${post.file}`, { cache: "no-store" });
+    if (!response.ok) throw new Error("文章正文不存在");
+    const rawMarkdown = await response.text();
+    const { html, headings } = markdownToHtml(rawMarkdown);
+    contentRoot.innerHTML = html;
+    tocRoot.innerHTML = headings
+      .filter((heading) => heading.level === 2)
+      .map((heading) => `<a href="#${heading.id}">${escapeHtml(heading.text)}</a>`)
+      .join("");
+    if (!tocRoot.innerHTML) $(".article-toc").hidden = true;
+    setupMarkdownActions(post, rawMarkdown);
+    void setupPostAnalytics(post);
+  } catch (error) {
+    contentRoot.innerHTML = errorMarkup("文章正文加载失败。");
+  }
+}
+
+function setupTheme() {
+  const themeToggle = $("[data-theme-toggle]");
+  const applyTheme = (theme) => {
+    document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#181918" : "#f7f6f1");
+    if (!themeToggle) return;
+    const isDark = theme === "dark";
+    themeToggle.textContent = isDark ? "☀" : "◐";
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+    themeToggle.setAttribute("aria-label", isDark ? "切换至浅色模式" : "切换至深色模式");
+  };
+
+  const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  applyTheme(currentTheme);
+  themeToggle?.addEventListener("click", () => {
+    const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+    try {
+      localStorage.setItem("guanzheng-theme", nextTheme);
+    } catch {
+      // 存储不可用时仍可正常切换。
+    }
+  });
+}
+
+async function boot() {
+  setupTheme();
+  document.querySelectorAll("[data-current-year]").forEach((node) => {
+    node.textContent = String(new Date().getFullYear());
+  });
+
+  try {
+    const posts = await loadPosts();
+    renderHome(posts);
+    await renderPost(posts);
+  } catch (error) {
+    $("#post-list") && ($("#post-list").innerHTML = errorMarkup("文章索引加载失败。"));
+    $("#post-content") && ($("#post-content").innerHTML = errorMarkup("文章索引加载失败。"));
+  }
+}
+
+boot();

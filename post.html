@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Guanzheng 的月度笔记。" />
+    <meta name="theme-color" content="#f7f6f1" />
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("guanzheng-theme");
+          const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.dataset.theme = theme;
+          document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#181918" : "#f7f6f1";
+        } catch {}
+      })();
+    </script>
+    <title>文章 · Guanzheng's Blog</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="wordmark" href="./index.html" aria-label="Guanzheng's Blog 首页">
+          <span>Guanzheng's Blog</span><i aria-hidden="true">.</i>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="./about.html">关于</a>
+          <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" aria-pressed="false">◐</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" class="article-shell">
+      <a class="back-link" href="./index.html">← 返回文章</a>
+      <article id="article" class="article" aria-live="polite">
+        <header class="article-header">
+          <h1 id="article-title">正在读取文章…</h1>
+          <div id="article-stats" class="article-stats" hidden></div>
+          <div id="article-actions" class="article-actions" hidden>
+            <button id="copy-markdown" type="button">复制 Markdown</button>
+            <a id="download-markdown" download>下载 .md</a>
+            <span id="markdown-status" aria-live="polite"></span>
+          </div>
+        </header>
+        <div class="article-layout">
+          <aside class="article-toc" aria-label="文章目录">
+            <p>目录</p>
+            <nav id="article-toc"></nav>
+          </aside>
+          <div id="post-content" class="article-content"></div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span data-current-year></span> Guanzheng</p>
+    </footer>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
