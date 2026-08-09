@@ -181,7 +181,7 @@ button:focus-visible {
   font-weight: 650;
   letter-spacing: -.035em;
   line-height: 1.22;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .post-row h2 a:hover { color: var(--accent); }
@@ -215,7 +215,8 @@ button:focus-visible {
   font-weight: 650;
   letter-spacing: -.045em;
   line-height: 1.14;
-  text-wrap: balance;
+  text-wrap: pretty;
+  word-break: normal;
 }
 
 .article-actions {
@@ -312,7 +313,7 @@ button:focus-visible {
   font-family: var(--font);
   font-weight: 650;
   letter-spacing: -.035em;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .article-content h2 {
@@ -426,7 +427,6 @@ button:focus-visible {
   .article-header { padding-bottom: 2rem; }
   .article-header h1 {
     font-size: clamp(1.625rem, calc(1.125rem + 2vw), 2rem);
-    text-wrap: wrap;
   }
   .article-actions { gap: .45rem; margin-top: 1rem; }
   .article-actions a,
@@ -438,23 +438,8 @@ button:focus-visible {
   .article-content h2 {
     margin: 2.9rem 0 1.05rem;
     font-size: clamp(1.4rem, calc(1.2rem + .8vw), 1.55rem);
-    text-wrap: wrap;
   }
-  .article-content h3 { text-wrap: wrap; }
   .article-content p { margin-bottom: 1.45rem; }
-}
-
-@media (min-width: 600px) {
-  .article-header h1,
-  .article-content h2,
-  .article-content h3 {
-    text-wrap: balance;
-    word-break: keep-all;
-  }
-}
-
-@media (max-width: 360px) {
-  .article-header h1 { text-wrap: balance; }
 }
 
 @media (prefers-reduced-motion: reduce) {
