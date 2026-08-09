@@ -69,7 +69,7 @@ function renderInline(text) {
   rendered = rendered.replace(/\*([^*]+)\*/g, "<em>$1</em>");
   rendered = rendered.replace(
     /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noreferrer">$1 ↗</a>',
+    '<a href="$2" target="_blank" rel="noreferrer">$1↗︎</a>',
   );
   return rendered;
 }
