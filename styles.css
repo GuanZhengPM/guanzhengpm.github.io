@@ -12,6 +12,7 @@
   --muted: #625f59;
   --faint: #77746c;
   --line: #d8d6ce;
+  --control-line: color-mix(in srgb, var(--ink) 48%, var(--bg));
   --accent: #176b9e;
   --accent-soft: #e4f0f6;
   --font: "Guanzheng Times", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -41,7 +42,6 @@ html {
 body {
   display: flex;
   flex-direction: column;
-  min-width: 320px;
   min-height: 100svh;
   margin: 0;
   color: var(--ink);
@@ -152,7 +152,7 @@ button:focus-visible {
   place-items: center;
   padding: 0;
   color: var(--ink);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: 50%;
   background: transparent;
   cursor: pointer;
@@ -174,7 +174,7 @@ button:focus-visible {
 
 .post-row { padding: 1.25rem 0 2rem; }
 
-.post-row h3 {
+.post-row h2 {
   margin: 0;
   font-family: var(--font);
   font-size: clamp(1.3rem, 2vw, 1.7rem);
@@ -184,7 +184,7 @@ button:focus-visible {
   text-wrap: balance;
 }
 
-.post-row h3 a:hover { color: var(--accent); }
+.post-row h2 a:hover { color: var(--accent); }
 
 .site-footer {
   flex: 0 0 auto;
@@ -226,37 +226,33 @@ button:focus-visible {
   margin-top: 1.15rem;
 }
 
-.article-actions button,
 .article-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 2.35rem;
   padding: .4rem .65rem;
   color: var(--muted);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: .25rem;
   background: transparent;
   font-family: var(--font);
   font-size: .82rem;
-  line-height: 1.3;
+  line-height: 1;
 }
 
-.article-actions button { cursor: pointer; }
-
-.article-actions button:hover,
 .article-actions a:hover {
   color: var(--ink);
   border-color: var(--ink);
 }
 
-#markdown-status {
-  min-width: 0;
-  min-height: 1.2em;
-  color: var(--muted);
-  font-size: .82rem;
-}
-
 .article-word-count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.35rem;
   color: var(--muted);
   font-size: .82rem;
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -376,7 +372,7 @@ button:focus-visible {
 
 .load-error { color: var(--muted); }
 
-@media (min-width: 1360px) {
+@media (min-width: 1440px) {
   .article {
     display: grid;
     width: min(100%, var(--page-width));
@@ -412,6 +408,13 @@ button:focus-visible {
   }
 }
 
+@media (max-width: 1439px) {
+  .article-toc nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+}
+
 @media (max-width: 700px) {
   .site-header__inner,
   .page-shell,
@@ -428,27 +431,15 @@ button:focus-visible {
 
   .article-shell { padding-top: 2.25rem; }
   .article-header { padding-bottom: 2rem; }
-  .article-header h1 { font-size: clamp(2rem, 9vw, 2.5rem); }
   .article-actions { gap: .45rem; margin-top: 1rem; }
-  .article-actions button,
-  .article-actions a { min-height: 2.5rem; }
+  .article-actions a,
+  .article-word-count { min-height: 2.5rem; }
 
   .article-toc { margin-bottom: 1.75rem; }
-  .article-toc nav {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 1rem;
-  }
 
   .article-content { font-size: 1rem; line-height: 1.9; }
   .article-content h2 { margin: 2.9rem 0 1.05rem; }
   .article-content p { margin-bottom: 1.45rem; }
-
-}
-
-@media (max-width: 420px) {
-  .article-toc nav { grid-template-columns: 1fr; }
-  .article-actions { align-items: flex-start; }
-  .article-word-count { align-self: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
