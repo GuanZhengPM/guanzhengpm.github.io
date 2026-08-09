@@ -227,6 +227,32 @@ function setupMarkdownActions(post, markdown) {
   actionsRoot.hidden = false;
 }
 
+function setupArticleToc(hasItems) {
+  const articleRoot = $("#article");
+  const tocSection = $(".article-toc");
+  const tocRoot = $("#article-toc");
+  const toggle = $("#toc-toggle");
+  const toggleLabel = $("#toc-toggle-label");
+  if (!articleRoot || !tocSection || !tocRoot || !toggle || !toggleLabel) return;
+
+  if (!hasItems) {
+    tocSection.hidden = true;
+    articleRoot.classList.add("is-toc-collapsed");
+    return;
+  }
+
+  const setTocExpanded = (expanded) => {
+    articleRoot.classList.toggle("is-toc-collapsed", !expanded);
+    tocRoot.hidden = !expanded;
+    toggle.setAttribute("aria-expanded", String(expanded));
+    toggle.setAttribute("aria-label", expanded ? "收起目录" : "展开目录");
+    toggleLabel.textContent = expanded ? "收起" : "展开";
+  };
+
+  toggle.onclick = () => setTocExpanded(toggle.getAttribute("aria-expanded") !== "true");
+  setTocExpanded(false);
+}
+
 async function renderPost(posts) {
   const articleRoot = $("#article");
   if (!articleRoot) return;
@@ -255,7 +281,7 @@ async function renderPost(posts) {
       .filter((heading) => heading.level === 2)
       .map((heading) => `<a href="#${heading.id}">${escapeHtml(heading.text)}</a>`)
       .join("");
-    if (!tocRoot.innerHTML) $(".article-toc").hidden = true;
+    setupArticleToc(Boolean(tocRoot.innerHTML));
     setupMarkdownActions(post, rawMarkdown);
   } catch (error) {
     contentRoot.innerHTML = errorMarkup("文章正文加载失败。");
