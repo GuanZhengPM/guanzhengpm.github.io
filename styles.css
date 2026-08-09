@@ -60,10 +60,6 @@ button:focus-visible {
 
 .skip-link:focus { transform: translateY(0); }
 
-.site-header {
-  border-bottom: 1px solid var(--line);
-}
-
 .site-header__inner,
 .page-shell,
 .article-shell,
@@ -175,7 +171,6 @@ button:focus-visible {
 .article-header {
   width: min(100%, var(--article-expanded-width));
   padding-bottom: 3.7rem;
-  border-bottom: 1px solid var(--line);
 }
 
 .article.is-toc-collapsed .article-header,
@@ -218,6 +213,7 @@ button:focus-visible {
 }
 
 #markdown-status { min-width: 3.5rem; color: var(--muted); font-size: .76rem; }
+.article-word-count { color: var(--muted); font-size: .76rem; white-space: nowrap; }
 
 .article-layout {
   display: grid;
@@ -311,7 +307,6 @@ button:focus-visible {
 .article-content pre { overflow-x: auto; margin: 2rem 0; padding: 1.15rem; color: var(--ink); border: 1px solid var(--line); background: var(--surface); }
 .article-content pre code { padding: 0; background: transparent; }
 .article-content a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent), transparent 45%); text-underline-offset: 3px; }
-.article-content hr { margin: 3.2rem 0; border: 0; border-top: 1px solid var(--line); }
 
 .about-shell { max-width: 780px; padding: clamp(5.5rem, 12vw, 9rem) 0 8rem; }
 .about-shell h1 { margin-bottom: 2.5rem; }
