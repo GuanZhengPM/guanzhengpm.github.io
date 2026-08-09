@@ -142,7 +142,6 @@ function markdownToHtml(markdown) {
 
     if (line === "---") {
       flushBlocks();
-      html.push("<hr />");
       continue;
     }
 
@@ -227,6 +226,19 @@ function setupMarkdownActions(post, markdown) {
   actionsRoot.hidden = false;
 }
 
+function showArticleWordCount(contentRoot) {
+  const wordCountRoot = $("#article-word-count");
+  if (!wordCountRoot || !contentRoot) return;
+
+  const characters = [...contentRoot.children]
+    .filter((node) => !/^H[1-6]$/.test(node.tagName))
+    .map((node) => node.textContent)
+    .join("")
+    .replace(/\s/g, "").length;
+
+  wordCountRoot.textContent = `${new Intl.NumberFormat("zh-CN").format(characters)} 字`;
+}
+
 function setupArticleToc(hasItems) {
   const articleRoot = $("#article");
   const tocSection = $(".article-toc");
@@ -277,6 +289,7 @@ async function renderPost(posts) {
     const rawMarkdown = await response.text();
     const { html, headings } = markdownToHtml(rawMarkdown);
     contentRoot.innerHTML = html;
+    showArticleWordCount(contentRoot);
     tocRoot.innerHTML = headings
       .filter((heading) => heading.level === 2)
       .map((heading) => `<a href="#${heading.id}">${escapeHtml(heading.text)}</a>`)
