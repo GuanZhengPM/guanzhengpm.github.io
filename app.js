@@ -15,6 +15,13 @@ function postHref(post) {
   return `./post.html?id=${encodeURIComponent(post.id)}`;
 }
 
+function postTitleMarkup(title) {
+  const match = /^(\d{4}M\d{1,2}——)(.+)$/.exec(title);
+  if (!match) return escapeHtml(title);
+
+  return `<span class="article-title__date">${escapeHtml(match[1])}</span><span class="article-title__subject">${escapeHtml(match[2])}</span>`;
+}
+
 function errorMarkup(message) {
   return `<p class="load-error">${escapeHtml(message)} 请刷新页面后重试。</p>`;
 }
@@ -42,7 +49,7 @@ function renderHome(posts) {
       (post) => `
         <article class="post-row">
           <div>
-            <h2><a href="${postHref(post)}">${escapeHtml(post.title)}</a></h2>
+            <h2><a href="${postHref(post)}">${postTitleMarkup(post.title)}</a></h2>
           </div>
         </article>
       `,
@@ -275,7 +282,7 @@ async function renderPost(posts) {
   const contentRoot = $("#post-content");
   const tocRoot = $("#article-toc");
 
-  titleRoot.textContent = post.title;
+  titleRoot.innerHTML = postTitleMarkup(post.title);
   document.title = `${post.title}·Guanzheng's Blog`;
 
   try {
