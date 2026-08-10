@@ -316,7 +316,6 @@ function setupTheme() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#181918" : "#f7f6f1");
     if (!themeToggle) return;
     const isDark = theme === "dark";
-    themeToggle.textContent = isDark ? "☀" : "◐";
     themeToggle.setAttribute("aria-pressed", String(isDark));
     themeToggle.setAttribute("aria-label", isDark ? "切换至浅色模式" : "切换至深色模式");
   };

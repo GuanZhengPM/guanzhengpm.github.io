@@ -37,6 +37,7 @@
 html {
   background: var(--bg);
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -167,6 +168,9 @@ button:focus-visible {
   cursor: pointer;
   line-height: 1;
 }
+
+.theme-toggle::before { content: "◐"; }
+:root[data-theme="dark"] .theme-toggle::before { content: "☀"; }
 
 .page-shell--home {
   display: flex;
