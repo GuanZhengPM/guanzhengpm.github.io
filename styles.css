@@ -101,6 +101,7 @@ button:focus-visible {
 .article-shell { flex: 1 0 auto; }
 
 .site-header__inner {
+  --nav-label-size: .86rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -126,7 +127,12 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-.wordmark--back { color: var(--muted); }
+.wordmark--back {
+  color: var(--muted);
+  font-size: var(--nav-label-size);
+  font-weight: 700;
+  letter-spacing: 0;
+}
 .wordmark[href]:hover,
 .wordmark--back:hover { color: var(--accent); }
 
@@ -137,7 +143,7 @@ button:focus-visible {
   gap: 1rem;
   color: var(--muted);
   font-family: var(--font);
-  font-size: .86rem;
+  font-size: var(--nav-label-size);
 }
 
 .site-nav a {
@@ -401,9 +407,13 @@ button:focus-visible {
   .article-shell,
   .site-footer { width: min(calc(100% - 2rem), var(--page-width)); }
 
-  .site-header__inner { min-height: 4rem; gap: .75rem; }
-  .wordmark { font-size: .94rem; }
-  .site-nav { gap: .7rem; font-size: .8rem; }
+  .site-header__inner {
+    --nav-label-size: .8rem;
+    min-height: 4rem;
+    gap: .75rem;
+  }
+  .wordmark:not(.wordmark--back) { font-size: .94rem; }
+  .site-nav { gap: .7rem; font-size: var(--nav-label-size); }
   .theme-toggle { width: 2.25rem; height: 2.25rem; }
 
   .page-shell--home { padding-top: 2.75rem; }
