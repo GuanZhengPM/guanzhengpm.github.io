@@ -127,7 +127,7 @@ button:focus-visible {
 }
 
 .wordmark--back { color: var(--muted); }
-.wordmark:hover,
+.wordmark[href]:hover,
 .wordmark--back:hover { color: var(--accent); }
 
 .site-nav {
@@ -140,7 +140,10 @@ button:focus-visible {
   font-size: .86rem;
 }
 
-.site-nav a { transition: color 160ms ease; }
+.site-nav a {
+  font-weight: 700;
+  transition: color 160ms ease;
+}
 .site-nav a:hover,
 .site-nav a.is-active { color: var(--ink); }
 
