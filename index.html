@@ -4,45 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Guanzheng的月度笔记：关于AI、产品、职业与学习中的判断。" />
-    <meta name="theme-color" content="#f7f6f1" />
+    <meta name="theme-color" content="#f9f5ed" />
     <script>
       (() => {
         try {
           const saved = localStorage.getItem("guanzheng-theme");
           const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
           document.documentElement.dataset.theme = theme;
-          document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#181918" : "#f7f6f1";
+          document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#161814" : "#f9f5ed";
         } catch {}
       })();
     </script>
     <title>Guanzheng's Blog</title>
     <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=13" />
+    <link rel="stylesheet" href="./styles.css?v=14" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到正文</a>
     <header class="site-header">
       <div class="site-header__inner">
-        <span class="wordmark" aria-label="Guanzheng写字的地方">
-          <span>Guanzheng写字的地方✍️</span>
-        </span>
+        <span class="wordmark">Guanzheng 写字的地方</span>
         <nav class="site-nav" aria-label="主导航">
-          <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub↗︎</a>
+          <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub</a>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" aria-pressed="false"></button>
         </nav>
       </div>
     </header>
 
     <main id="main-content" class="page-shell page-shell--home" tabindex="-1">
-      <h1 class="sr-only">Guanzheng写字的地方</h1>
+      <h1 class="sr-only">Guanzheng 写字的地方</h1>
       <section class="post-list-section" aria-label="文章">
         <div id="post-list" class="post-list" aria-live="polite"></div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p>© <span data-current-year></span> Guanzheng</p>
+      <p class="num">© <span data-current-year></span> Guanzheng</p>
     </footer>
-    <script type="module" src="./app.js?v=9"></script>
+    <script type="module" src="./app.js?v=10"></script>
   </body>
 </html>
