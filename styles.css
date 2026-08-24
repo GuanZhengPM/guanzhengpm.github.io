@@ -38,6 +38,13 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* 大屏上放大整体尺度，而不是单纯拉长行。
+   --measure 和字号都是 rem，跟着根字号一起走，每行字数保持不变（约 36 字）。
+   用百分比而不是 px，用户在浏览器里调过默认字号仍然生效。 */
+@media (min-width: 1500px) { html { font-size: 106.25%; } }
+@media (min-width: 1800px) { html { font-size: 112.5%; } }
+@media (min-width: 2200px) { html { font-size: 118.75%; } }
+
 body {
   display: flex;
   flex-direction: column;
@@ -46,7 +53,7 @@ body {
   color: var(--body);
   background: var(--bg);
   font-family: var(--font);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.75;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
