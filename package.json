@@ -5,6 +5,7 @@
   "description": "A zero-dependency static blog for GitHub Pages.",
   "scripts": {
     "new": "node scripts/new-post.mjs",
+    "build": "node scripts/build-index.mjs",
     "check": "node scripts/check-posts.mjs",
     "preview": "python3 -m http.server 4173"
   }
