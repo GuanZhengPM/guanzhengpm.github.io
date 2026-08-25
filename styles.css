@@ -39,7 +39,7 @@ html {
 }
 
 /* 大屏上放大整体尺度，而不是单纯拉长行。
-   --measure 和字号都是 rem，跟着根字号一起走，每行字数保持不变（约 40 字）。
+   --measure 和字号都是 rem，跟着根字号一起走，每行字数保持不变（约 46 字）。
    用百分比而不是 px，用户在浏览器里调过默认字号仍然生效。 */
 @media (min-width: 1500px) { html { font-size: 106.25%; } }
 @media (min-width: 1800px) { html { font-size: 112.5%; } }
@@ -381,8 +381,14 @@ summary:focus-visible {
 
 /* 目录浮到正文列左侧的页边距里，正文列的中轴和首页保持一致。
    门槛 1080px 是算出来的：正文 720 + 两侧各 (32 + 120) = 1024，
-   竖屏显示器最常见的 1080 宽正好放得下。 */
+   竖屏显示器最常见的 1080 宽正好放得下。
+   1240 以上正文加宽到 832，832 + 304 = 1136 仍然放得下。 */
 @media (min-width: 1080px) {
+  /* 正文自己居中的话，左边距被目录占着、右边是纯空的，视觉重心会偏。
+     把正文向右挪半个侧栏宽，让「目录 + 正文」整体居中，两侧留白才等宽。
+     用 left 而不是 transform——transform 会让内部的 sticky 目录失效。 */
+  .article-shell { left: calc((var(--toc-gap) + var(--toc-width)) / 2); }
+
   .article-toc {
     position: absolute;
     top: 4.5rem;
@@ -418,6 +424,12 @@ summary:focus-visible {
   }
 
   .article-toc a[aria-current="location"] { border-left-color: var(--accent); }
+}
+
+/* 放得下的时候把正文列加宽到 52rem。
+   低于 1240px 保持 45rem，否则侧栏在 1080 竖屏上挤不下。 */
+@media (min-width: 1240px) {
+  :root { --measure: 52rem; }
 }
 
 /* 宽屏上把侧栏和间距放开一点。 */
