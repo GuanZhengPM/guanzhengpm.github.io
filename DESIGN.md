@@ -74,12 +74,15 @@ macOS 得到 SF Pro + PingFang，Windows 得到 Segoe UI + 微软雅黑，两组
 
 ```css
 .article-content p {
-  margin: 0 0 24px;
-  font-size: 17px;
+  margin: 0 0 1.5rem;
+  font-size: 1.125rem;
   line-height: 1.85;
-  text-wrap: pretty;
+  text-align: justify;   /* 汉字等宽，左对齐时右边缘参差得很明显 */
+  text-wrap: pretty;     /* 避免最后一行只剩一两个字 */
 }
 ```
+
+**两端对齐不要写 `text-justify`。** 默认的 `auto` 会中文按字距、英文按词距地撑开；指定 `inter-character` 会把 `offer`、`Leader` 这类单词内部的字母也拉开，很难看。
 
 **不要**恢复 `text-indent: 2em`。它和段距叠加会把左边缘啃出缺口。
 
@@ -134,7 +137,7 @@ macOS 得到 SF Pro + PingFang，Windows 得到 Segoe UI + 微软雅黑，两组
 
 1. 这些宽度下没有横向溢出：320、375、768、1024、1080、1240、1400、1500、1650、1800、2400
 2. 文章页左右留白等宽，且页眉、目录、页脚左缘对齐
-3. **把文章滚到 30% / 60% / 100%，目录仍钉在左侧**——这是最容易悄悄坏掉的一条
+3. **把文章滚到 30% / 60% / 100%，目录仍钉在左侧，且高亮项跟着走**——这两条最容易悄悄坏掉
 4. 改了 `styles.css` 记得把两个 HTML 里的 `styles.css?v=` 版本号 +1，否则浏览器吃缓存
 
 ## 图标
@@ -179,7 +182,11 @@ macOS 得到 SF Pro + PingFang，Windows 得到 Segoe UI + 微软雅黑，两组
 3. 标题
 4. 下载 .md
 5. 正文
-6. 左侧 sticky 目录，跟随滚动高亮当前章节（用 `IntersectionObserver`，不要只监听 `hashchange`）
+6. 左侧 sticky 目录，跟随滚动高亮当前章节
+
+**目录高亮按滚动位置直接算，不要用 `IntersectionObserver`。** IO 只在「是否相交」翻转的那一刻回调；标题停在视口顶部到判定带之间的那一段里不产生翻转，回调根本不触发，高亮就卡在上一节不动——整屏都是第 5 节了目录还亮着 04。正确做法是每次滚动取「最后一个 `top <= 视口高度 × 0.25` 的标题」，再补一条：滚到底时直接点亮最后一节（末节太短时标题够不到判定线）。
+
+进度条和目录高亮共用一个 `scroll` 监听，不套 `requestAnimationFrame`（scroll 本身已按帧合并）。进度条用 `transform: scaleX()` 而不是 `width`，写入只走合成层，不会让下一次 `getBoundingClientRect` 被迫重新布局。
 
 ## 暂时去掉的，什么时候加回来
 

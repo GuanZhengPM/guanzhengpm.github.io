@@ -271,54 +271,52 @@ function scrollToHash({ instant = false } = {}) {
   });
 }
 
-/** 目录跟着滚动走，高亮当前所在章节。 */
+/** 目录跟着滚动走，高亮当前所在章节。返回一个更新函数，交给滚动监听调用。
+ *
+ * 不用 IntersectionObserver：它只在「是否相交」翻转时回调，标题停在视口顶部
+ * 那一小段里不产生翻转，高亮就会卡在上一节不动。直接按滚动位置算最稳。 */
 function setupTocScrollSpy(links) {
   const targets = links
     .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
     .filter(Boolean);
-  if (!targets.length) return;
+  if (!targets.length) return null;
 
+  let currentId = null;
   const setCurrent = (id) => {
+    if (id === currentId) return;
+    currentId = id;
     links.forEach((link) => {
       if (decodeURIComponent(link.hash.slice(1)) === id) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
     });
   };
 
-  const visible = new Set();
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) visible.add(entry.target.id);
-        else visible.delete(entry.target.id);
-      });
+  return () => {
+    const root = document.documentElement;
+    // 判定线放在视口靠上四分之一处：标题越过它，就算进入了那一节。
+    const line = root.clientHeight * 0.25;
+    let id = targets[0].id;
+    for (const target of targets) {
+      if (target.getBoundingClientRect().top > line) break;
+      id = target.id;
+    }
 
-      const first = targets.find((target) => visible.has(target.id));
-      if (first) {
-        setCurrent(first.id);
-        return;
-      }
+    // 最后一节太短、标题够不到判定线时，滚到底就直接点亮它。
+    if (root.scrollTop + root.clientHeight >= root.scrollHeight - 2) id = targets[targets.length - 1].id;
 
-      // 章节标题都滚出视口时，落在最后一个已经越过顶部的标题上。
-      const passed = targets.filter((target) => target.getBoundingClientRect().top < 0);
-      if (passed.length) setCurrent(passed[passed.length - 1].id);
-    },
-    { rootMargin: "-10% 0px -70% 0px", threshold: 0 },
-  );
-
-  targets.forEach((target) => observer.observe(target));
-  setCurrent(targets[0].id);
+    setCurrent(id);
+  };
 }
 
 function setupArticleToc(headings) {
   const tocWrap = $("#article-toc-wrap");
   const tocRoot = $("#article-toc");
-  if (!tocWrap || !tocRoot) return;
+  if (!tocWrap || !tocRoot) return null;
 
   const items = headings.filter((heading) => heading.level === 2);
   if (!items.length) {
     tocWrap.hidden = true;
-    return;
+    return null;
   }
 
   tocRoot.innerHTML = items
@@ -331,7 +329,7 @@ function setupArticleToc(headings) {
     .join("");
 
   const links = [...tocRoot.querySelectorAll("a")];
-  setupTocScrollSpy(links);
+  const updateToc = setupTocScrollSpy(links);
 
   // 宽到能放下侧栏时摊开，窄了收起；转屏或折叠屏展开时跟着变。
   const wideEnough = window.matchMedia("(min-width: 1080px)");
@@ -340,29 +338,31 @@ function setupArticleToc(headings) {
   };
   syncOpen();
   wideEnough.addEventListener("change", syncOpen);
+
+  return updateToc;
 }
 
-function setupReadingProgress() {
+/** 顶部阅读进度条 + 目录高亮，共用一个滚动监听。
+ *
+ * 不套 requestAnimationFrame：scroll 事件本身已经按帧合并，而这里每次只做
+ * 几个 getBoundingClientRect（纯读，不触发强制重排）。进度条用 transform
+ * 而不是 width，写入只走合成层，不会让下一次读取被迫重新布局。 */
+function setupScrollEffects(updateToc) {
   const bar = $("[data-reading-progress]");
-  if (!bar) return;
+  if (!bar && !updateToc) return;
 
-  let ticking = false;
   const update = () => {
-    ticking = false;
-    const root = document.documentElement;
-    const scrollable = root.scrollHeight - root.clientHeight;
-    const ratio = scrollable > 0 ? Math.min(1, Math.max(0, root.scrollTop / scrollable)) : 0;
-    bar.style.width = `${(ratio * 100).toFixed(2)}%`;
+    if (bar) {
+      const root = document.documentElement;
+      const scrollable = root.scrollHeight - root.clientHeight;
+      const ratio = scrollable > 0 ? Math.min(1, Math.max(0, root.scrollTop / scrollable)) : 0;
+      bar.style.transform = `scaleX(${ratio.toFixed(4)})`;
+    }
+    updateToc?.();
   };
 
-  const schedule = () => {
-    if (ticking) return;
-    ticking = true;
-    window.requestAnimationFrame(update);
-  };
-
-  window.addEventListener("scroll", schedule, { passive: true });
-  window.addEventListener("resize", schedule);
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
   update();
 }
 
@@ -396,9 +396,8 @@ async function renderPost(posts) {
     const rawMarkdown = await response.text();
     const { html, headings } = markdownToHtml(rawMarkdown);
     contentRoot.innerHTML = html;
-    setupArticleToc(headings);
+    setupScrollEffects(setupArticleToc(headings));
     setupMarkdownDownload(post, rawMarkdown);
-    setupReadingProgress();
     articleRoot.setAttribute("aria-busy", "false");
     window.requestAnimationFrame(() => scrollToHash({ instant: true }));
   } catch (error) {
