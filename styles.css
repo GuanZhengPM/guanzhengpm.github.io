@@ -11,10 +11,10 @@
   --accent: #b4531f;
   --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "Segoe UI", "Microsoft YaHei", sans-serif;
   /* 页眉、正文、页脚共用这一个宽度，左边缘才落在同一条竖线上。 */
-  --measure: 40rem;
+  --measure: 45rem;
   --gutter: clamp(1.375rem, 4vw, 4rem);
-  --toc-gap: 2.75rem;
-  --toc-width: 9.5rem;
+  --toc-gap: 2rem;
+  --toc-width: 7.5rem;
 }
 
 :root[data-theme="dark"] {
@@ -39,7 +39,7 @@ html {
 }
 
 /* 大屏上放大整体尺度，而不是单纯拉长行。
-   --measure 和字号都是 rem，跟着根字号一起走，每行字数保持不变（约 36 字）。
+   --measure 和字号都是 rem，跟着根字号一起走，每行字数保持不变（约 40 字）。
    用百分比而不是 px，用户在浏览器里调过默认字号仍然生效。 */
 @media (min-width: 1500px) { html { font-size: 106.25%; } }
 @media (min-width: 1800px) { html { font-size: 112.5%; } }
@@ -380,7 +380,7 @@ summary:focus-visible {
 .article-toc a[aria-current="location"] b { color: var(--accent); }
 
 /* 目录浮到正文列左侧的页边距里，正文列的中轴和首页保持一致。
-   门槛 1080px 是算出来的：正文 640 + 两侧各(--toc-gap + --toc-width)，
+   门槛 1080px 是算出来的：正文 720 + 两侧各 (32 + 120) = 1024，
    竖屏显示器最常见的 1080 宽正好放得下。 */
 @media (min-width: 1080px) {
   .article-toc {
@@ -422,7 +422,7 @@ summary:focus-visible {
 
 /* 宽屏上把侧栏和间距放开一点。 */
 @media (min-width: 1400px) {
-  :root { --toc-gap: 4rem; --toc-width: 11.5rem; }
+  :root { --toc-gap: 3rem; --toc-width: 10rem; }
 }
 
 /* ——— 各种非常规视口 ——— */
@@ -476,7 +476,7 @@ summary:focus-visible {
 
 .article-content p {
   margin: 0 0 1.5rem;
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.85;
   text-wrap: pretty;
 }
@@ -506,7 +506,7 @@ summary:focus-visible {
 .article-content ol {
   margin: 0 0 1.5rem;
   padding-left: 1.4rem;
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.85;
 }
 
