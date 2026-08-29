@@ -1,36 +1,72 @@
 [
   {
     "id": "2026-08",
-    "file": "posts/2026-08-multi-speed-era.md",
-    "title": "2026M8——保持主见，追求硬核",
     "date": "2026-08-09",
-    "words": 8817,
-    "minutes": 26,
-    "sections": [
-      {
-        "id": "section-1",
-        "label": "1.【保持主见】在职业生涯的早期，不要听HR和猎头的建议，也不要听2023年前毕业的前辈的建议"
+    "languages": {
+      "zh": {
+        "file": "posts/2026-08-multi-speed-era.md",
+        "title": "2026M8——保持主见，追求硬核",
+        "words": 8817,
+        "minutes": 26,
+        "sections": [
+          {
+            "id": "section-1",
+            "label": "1.【保持主见】在职业生涯的早期，不要听HR和猎头的建议，也不要听2023年前毕业的前辈的建议"
+          },
+          {
+            "id": "section-2",
+            "label": "2.【内自省也】绝大多数公司、绝大多数部门，牛逼的人总是少数，大部分人很普通、甚至一半的人“有些菜”"
+          },
+          {
+            "id": "section-3",
+            "label": "3.【追求硬核】区分经验和能力，经验多不等于能力强"
+          },
+          {
+            "id": "section-4",
+            "label": "4.【创造价值】选择大趋势上的非共识，做难而有价值的事情，不为了和别人不一样而不一样"
+          },
+          {
+            "id": "section-5",
+            "label": "5.【迎浪而上】在快速变化的行业内，必须拥抱不确定性，且敢于做选择"
+          },
+          {
+            "id": "section-6",
+            "label": "6.【底线思维】考虑极端场景的最差结果可不可以接受，可以就上"
+          }
+        ]
       },
-      {
-        "id": "section-2",
-        "label": "2.【内自省也】绝大多数公司、绝大多数部门，牛逼的人总是少数，大部分人很普通、甚至一半的人“有些菜”"
-      },
-      {
-        "id": "section-3",
-        "label": "3.【追求硬核】区分经验和能力，经验多不等于能力强"
-      },
-      {
-        "id": "section-4",
-        "label": "4.【创造价值】选择大趋势上的非共识，做难而有价值的事情，不为了和别人不一样而不一样"
-      },
-      {
-        "id": "section-5",
-        "label": "5.【迎浪而上】在快速变化的行业内，必须拥抱不确定性，且敢于做选择"
-      },
-      {
-        "id": "section-6",
-        "label": "6.【底线思维】考虑极端场景的最差结果可不可以接受，可以就上"
+      "en": {
+        "file": "posts/2026-08-multi-speed-era.en.md",
+        "title": "2026M8 — Think for Yourself, Pursue Substance",
+        "words": 4338,
+        "minutes": 20,
+        "sections": [
+          {
+            "id": "section-1",
+            "label": "1. [Think for Yourself] Early in your career, do not simply follow the advice of HR, recruiters, or people who graduated before 2023"
+          },
+          {
+            "id": "section-2",
+            "label": "2. [Look Inward] Exceptional people are always a minority; in most companies and teams, most people are ordinary, and perhaps half are not very good"
+          },
+          {
+            "id": "section-3",
+            "label": "3. [Pursue Substance] Distinguish experience from ability; more experience does not mean stronger ability"
+          },
+          {
+            "id": "section-4",
+            "label": "4. [Create Value] Take non-consensus positions within major trends, and do difficult, valuable work—not different work merely for the sake of being different"
+          },
+          {
+            "id": "section-5",
+            "label": "5. [Meet the Wave] In a fast-changing industry, embrace uncertainty and dare to choose"
+          },
+          {
+            "id": "section-6",
+            "label": "6. [Downside Thinking] If you can accept the worst plausible outcome, act"
+          }
+        ]
       }
-    ]
+    }
   }
 ]

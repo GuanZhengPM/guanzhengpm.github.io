@@ -12,28 +12,33 @@
           const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
           document.documentElement.dataset.theme = theme;
           document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#161814" : "#f9f5ed";
+          const queryLanguage = new URLSearchParams(location.search).get("lang");
+          const language = ["zh", "en"].includes(queryLanguage) ? queryLanguage : localStorage.getItem("guanzheng-language") || "zh";
+          document.documentElement.lang = language === "en" ? "en" : "zh-CN";
+          document.documentElement.dataset.lang = language;
         } catch {}
       })();
     </script>
     <title>Guanzheng's Blog</title>
     <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=16" />
+    <link rel="stylesheet" href="./styles.css?v=17" />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">跳到正文</a>
+    <a class="skip-link" href="#main-content" data-i18n="skip">跳到正文</a>
     <header class="site-header">
       <div class="site-header__inner">
-        <span class="wordmark">Guanzheng 写字的地方</span>
-        <nav class="site-nav" aria-label="主导航">
+        <span class="wordmark" data-i18n="wordmark">Guanzheng 写字的地方</span>
+        <nav class="site-nav" aria-label="主导航" data-i18n-aria="nav">
           <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub</a>
+          <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to English">EN</button>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" aria-pressed="false"></button>
         </nav>
       </div>
     </header>
 
     <main id="main-content" class="page-shell page-shell--home" tabindex="-1">
-      <h1 class="sr-only">Guanzheng 写字的地方</h1>
-      <section class="post-list-section" aria-label="文章">
+      <h1 class="sr-only" data-i18n="wordmark">Guanzheng 写字的地方</h1>
+      <section class="post-list-section" aria-label="文章" data-i18n-aria="posts">
         <div id="post-list" class="post-list" aria-live="polite"></div>
       </section>
     </main>
@@ -41,6 +46,6 @@
     <footer class="site-footer">
       <p class="num">© <span data-current-year></span> Guanzheng</p>
     </footer>
-    <script type="module" src="./app.js?v=11"></script>
+    <script type="module" src="./app.js?v=13"></script>
   </body>
 </html>

@@ -12,23 +12,28 @@
           const theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
           document.documentElement.dataset.theme = theme;
           document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#161814" : "#f9f5ed";
+          const queryLanguage = new URLSearchParams(location.search).get("lang");
+          const language = ["zh", "en"].includes(queryLanguage) ? queryLanguage : localStorage.getItem("guanzheng-language") || "zh";
+          document.documentElement.lang = language === "en" ? "en" : "zh-CN";
+          document.documentElement.dataset.lang = language;
         } catch {}
       })();
     </script>
     <title>文章·Guanzheng's Blog</title>
     <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=16" />
+    <link rel="stylesheet" href="./styles.css?v=17" />
   </head>
   <body class="article-page">
-    <a class="skip-link" href="#main-content">跳到正文</a>
+    <a class="skip-link" href="#main-content" data-i18n="skip">跳到正文</a>
     <header class="site-header">
       <div class="site-header__inner">
         <a class="wordmark wordmark--back" href="./index.html">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
-          返回 Blog 列表
+          <span data-i18n="back">返回 Blog 列表</span>
         </a>
-        <nav class="site-nav" aria-label="主导航">
+        <nav class="site-nav" aria-label="主导航" data-i18n-aria="nav">
           <a href="https://github.com/GuanZhengPM" target="_blank" rel="noreferrer">GitHub</a>
+          <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to English">EN</button>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" aria-pressed="false"></button>
         </nav>
       </div>
@@ -40,17 +45,17 @@
       <article id="article" class="article" aria-busy="true">
         <header class="article-header">
           <p id="article-meta" class="article-meta num" hidden></p>
-          <h1 id="article-title">正在读取文章…</h1>
+          <h1 id="article-title" data-i18n="loading">正在读取文章…</h1>
           <div id="article-actions" class="article-actions" hidden>
             <a id="download-markdown" download>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 12l5 5 5-5"></path><path d="M4 20h16"></path></svg>
-              下载 .md
+              <span data-i18n="download">下载双语 .md</span>
             </a>
           </div>
         </header>
         <details class="article-toc" id="article-toc-wrap" open>
-          <summary>目录</summary>
-          <nav id="article-toc" aria-label="文章章节"></nav>
+          <summary data-i18n="toc">目录</summary>
+          <nav id="article-toc" aria-label="文章章节" data-i18n-aria="sections"></nav>
         </details>
         <div id="post-content" class="article-content"></div>
       </article>
@@ -59,6 +64,6 @@
     <footer class="site-footer">
       <p class="num">© <span data-current-year></span> Guanzheng</p>
     </footer>
-    <script type="module" src="./app.js?v=11"></script>
+    <script type="module" src="./app.js?v=13"></script>
   </body>
 </html>
