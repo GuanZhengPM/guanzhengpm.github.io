@@ -1,0 +1,5 @@
+interface:
+  display_name: "Guanzheng双端排版"
+  short_description: "一个Markdown同时准备GitHub Blog与公众号版本"
+  brand_color: "#B4531F"
+  default_prompt: "Use $wechat-guanzheng-layout to prepare this finished Markdown article for both the bilingual Guanzheng GitHub Blog and WeChat, with validation but no publishing."
