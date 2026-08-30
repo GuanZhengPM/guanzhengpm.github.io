@@ -1,4 +1,4 @@
-# Guanzheng 写字的地方 ✍️
+# Guanzheng Blog ✍️
 
 一个零依赖、部署在 GitHub Pages 的中英双语静态博客。
 
