@@ -1,5 +1,75 @@
 [
   {
+    "id": "2026-08-bonus",
+    "date": "2026-08-30",
+    "languages": {
+      "zh": {
+        "file": "posts/2026-08-bonus-long-context-reasoning.md",
+        "title": "2026M8·加更——长上下文和推理能力，对人也很重要",
+        "words": 9372,
+        "minutes": 28,
+        "sections": [
+          {
+            "id": "section-1",
+            "label": "1.【习以为常】模型能读的东西越来越多，我们已经忘了这曾经是一件很酷的事情"
+          },
+          {
+            "id": "section-2",
+            "label": "2.【容量幻觉】上下文窗口很长，不等于真正拥有长上下文能力"
+          },
+          {
+            "id": "section-3",
+            "label": "3.【生成过剩】模型的内容生产能力，已经超过了很多人的内容消费能力"
+          },
+          {
+            "id": "section-4",
+            "label": "4.【信息丢失】人也会在长文章、长会议和长期项目里忘记最开始的问题"
+          },
+          {
+            "id": "section-5",
+            "label": "5.【推理外包】模型替你多想一会儿，不代表你因此获得了推理能力"
+          },
+          {
+            "id": "section-6",
+            "label": "6.【共同进化】AI可能没有抹平人与人的差距，反而把差距转移到了阅读、推理和判断上"
+          }
+        ]
+      },
+      "en": {
+        "file": "posts/2026-08-bonus-long-context-reasoning.en.md",
+        "title": "2026M8 Bonus Edition — Long Context and Reasoning Matter for Humans Too",
+        "words": 5630,
+        "minutes": 26,
+        "sections": [
+          {
+            "id": "section-1",
+            "label": "1. [Taking It for Granted] Models Can Read More and More, and We Have Forgotten How Cool That Once Felt"
+          },
+          {
+            "id": "section-2",
+            "label": "2. [The Capacity Illusion] A Long Context Window Is Not the Same as Real Long-Context Capability"
+          },
+          {
+            "id": "section-3",
+            "label": "3. [Generation Surplus] Models Can Produce More Content Than Many People Can Consume"
+          },
+          {
+            "id": "section-4",
+            "label": "4. [Information Loss] People Also Forget the Original Question in Long Articles, Long Meetings, and Long-Term Projects"
+          },
+          {
+            "id": "section-5",
+            "label": "5. [Outsourcing Reasoning] A Model Thinking Longer for You Does Not Mean You Have Acquired Reasoning Ability"
+          },
+          {
+            "id": "section-6",
+            "label": "6. [Co-evolution] AI May Not Eliminate Differences Between People; It May Move Those Differences into Reading, Reasoning, and Judgment"
+          }
+        ]
+      }
+    }
+  },
+  {
     "id": "2026-08",
     "date": "2026-08-09",
     "languages": {
