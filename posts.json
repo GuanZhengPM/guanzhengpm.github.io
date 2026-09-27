@@ -1,5 +1,59 @@
 [
   {
+    "id": "2026-09",
+    "date": "2026-09-28",
+    "languages": {
+      "zh": {
+        "file": "posts/2026-09-time-rewards-iteration.md",
+        "title": "2026M9——时间奖励迭代者，惩罚守旧者",
+        "words": 3290,
+        "minutes": 10,
+        "sections": [
+          {
+            "id": "section-1",
+            "label": "前言"
+          },
+          {
+            "id": "section-2",
+            "label": "聊聊简历"
+          },
+          {
+            "id": "section-3",
+            "label": "个人成长"
+          },
+          {
+            "id": "section-4",
+            "label": "勇攀高峰"
+          }
+        ]
+      },
+      "en": {
+        "file": "posts/2026-09-time-rewards-iteration.en.md",
+        "title": "2026M9 — Time Rewards Those Who Keep Iterating and Punishes Those Who Stay the Same",
+        "words": 2165,
+        "minutes": 10,
+        "sections": [
+          {
+            "id": "section-1",
+            "label": "Preface"
+          },
+          {
+            "id": "section-2",
+            "label": "On Résumés"
+          },
+          {
+            "id": "section-3",
+            "label": "Personal Growth"
+          },
+          {
+            "id": "section-4",
+            "label": "Climb the Mountain"
+          }
+        ]
+      }
+    }
+  },
+  {
     "id": "2026-08-bonus",
     "date": "2026-08-30",
     "languages": {
