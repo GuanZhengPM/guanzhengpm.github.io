@@ -137,9 +137,10 @@ def render(source: Path, signature: str | None, source_url: str | None) -> tuple
             section_number += 1
             text = str(value)
             match = re.match(r"^\d+\s*[.、]\s*[【[]([^】\]]+)[】\]]\s*(.*)$", text)
-            label, heading = (match.group(1), match.group(2)) if match else ("SECTION", re.sub(r"^\d+\s*[.、]\s*", "", text))
+            label, heading = (match.group(1), match.group(2)) if match else (None, re.sub(r"^\d+\s*[.、]\s*", "", text))
+            section_label = f"SECTION {section_number:02d}" + (f" · {label}" if label else "")
             out.append(f'<section style="margin:42px 0 18px;padding-top:2px;border-top:1px solid {LINE};">')
-            out.append(f'<p style="margin:12px 0 7px;color:{ACCENT};font-size:12px;font-weight:700;letter-spacing:.8px;">{leaf(f"SECTION {section_number:02d} · {label}")}</p>')
+            out.append(f'<p style="margin:12px 0 7px;color:{ACCENT};font-size:12px;font-weight:700;letter-spacing:.8px;">{leaf(section_label)}</p>')
             out.append(f'<p style="margin:0;color:{INK};font-size:21px;font-weight:700;line-height:1.5;">{inline.render(heading or text)}</p></section>')
         elif kind == "h3":
             out.append(f'<p style="margin:28px 0 12px;padding-left:12px;border-left:3px solid {ACCENT};color:{INK};font-size:17px;font-weight:700;line-height:1.6;">{inline.render(str(value))}</p>')
