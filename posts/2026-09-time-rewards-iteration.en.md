@@ -7,6 +7,8 @@ We have all heard a few sayings:
 - People are products of their environment.
 - Gold will shine wherever it is.
 
+But something about these sayings feels off to me. Time, the platform you are on, your environment, your own circumstances, and other factors all get mixed together here.
+
 The industry changes too fast. It is hard to make a complete judgment from the small sample of people around us. Even if I write a summary now, it may be out of date when I look at it again six months from now.
 
 I think I started helping people share JDs and refer candidates around 2022. Most of them were friends looking for someone to take over their internship roles, or people recruiting for teams I was in. In 2022–2023 I probably only looked at one or two hundred résumés.
